@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import {render_receipt} from './common.js'
 
 const styles = {
   root: {
@@ -41,22 +42,8 @@ class Exchange extends Component {
         }
     }
 
-    handleAmountChange = (event) => {
-        this.setState({
-            amount: event.target.value
-        })
-    }
-
-    handleToChange = (event) => {
-        this.setState({
-            to: event.target.value
-        })
-    }
-
-    handleFromChange = (event) => {
-        this.setState({
-            from: event.target.value
-        })
+    handleFormChange = (type, event) => {
+       this.setState({[type]: event.target.value});
     }
 
     handleSubmit = async (event) => {
@@ -65,22 +52,21 @@ class Exchange extends Component {
         const url = "http://localhost:5000/exchange" + `?amount=${amount}&to=${to}&base=${from}`
         let resp = await fetch(url)
         let data = await resp.json()
-        console.log(data)
         this.setState({receipt: data})
     }
 
-    render_receipt = () => {
-        const receipt = this.state.receipt
-        const classes = this.props.classes
-        if (receipt) {
-            return Object.keys(this.state.receipt).map((key) => {
-                return <span className={classes.receiptLine}>
-                            <div className={classes.receiptKey}>{key}:</div>
-                            <div>{this.state.receipt[key]}</div>
-                        </span>
-            })
-        }
-    }
+//    render_receipt = () => {
+//        const receipt = this.state.receipt
+//        const classes = this.props.classes
+//        if (receipt) {
+//            return Object.keys(this.state.receipt).map((key) => {
+//                return <span className={classes.receiptLine}>
+//                            <div className={classes.receiptKey}>{key}:</div>
+//                            <div>{this.state.receipt[key]}</div>
+//                        </span>
+//            })
+//        }
+//    }
 
   render() {
     const {classes, amount, to, from} = this.props
@@ -90,7 +76,7 @@ class Exchange extends Component {
         <Card className={classes.root}>
           <CardContent>
             <Typography variant="h5" component="h2" className={classes.cardTitle}>
-              Exchanges
+              Exchange Service
             </Typography>
                 <Grid container justify="center" alignItems="center" spacing={2} >
                     <Grid item xs={2}>
@@ -98,23 +84,23 @@ class Exchange extends Component {
                             id="standard-basic"
                             label="Amount"
                             value={amount}
-                            onChange={this.handleAmountChange} />
+                            onChange={(event) => this.handleFormChange('amount', event)} />
                     </Grid>
                     <Grid item xs={2}>
                         <TextField
                             id="standard-basic"
                             label="From"
                             value={from}
-                            onChange={this.handleFromChange} />
+                            onChange={(event) => this.handleFormChange('from', event)} />
                     </Grid>
                     <Grid item xs={2}>
                         <TextField
                             id="standard-basic"
                             label="To" value={to}
-                            onChange={this.handleToChange} />
+                            onChange={(event) => this.handleFormChange('to', event)} />
                     </Grid>
                 </Grid>
-          {receipt? <div className={classes.receipt}>{this.render_receipt()}</div> : null}
+          {receipt? <div className={classes.receipt}>{render_receipt(receipt, classes)}</div> : null}
           </CardContent>
           <CardActions style={{justifyContent: 'center'}}>
             <Button

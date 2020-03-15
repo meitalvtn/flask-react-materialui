@@ -23,9 +23,8 @@ def main():
             sys.exit(1)
         payload = {'amount': amount,
                    'loan_currency': loan_currency,
-                   'created': datetime.now()
+                   'created': datetime.now().strftime("%d-%m-%Y")
                    }
-        # TODO: Catch exception?
         receipt = requests.post('http://localhost:5000/loan', params=payload)
         print('Loan Details:    ')
         present_output(receipt.json())
@@ -37,7 +36,7 @@ def main():
             print('You must specify the loan id and the loan currency.')
             sys.exit(1)
         payload = {'id': loan_id,
-                   'ended': datetime.now(),
+                   'ended': datetime.now().strftime("%d-%m-%Y"),
                    'paid_currency': paid_currency
                    }
         receipt = requests.put('http://localhost:5000/loan', params=payload)
@@ -65,7 +64,6 @@ def main():
             to, base = sys.argv[3], sys.argv[2]
         else:
             to, base = sys.argv[2], 'ILS'
-        print(amount, to, base)
         payload = {'amount': amount, 'to': to, 'base': base}
         receipt = requests.get('http://localhost:5000/exchange', params=payload)
         print('Exchange Receipt:')

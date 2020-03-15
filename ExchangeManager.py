@@ -60,8 +60,9 @@ def generate_new_loan(amount, base, created):
 
 
 def get_total_commission(created, ended):
-    created_datetime = datetime.strptime(created, '%Y-%m-%d %H:%M:%S.%f')
-    ended_datetime = datetime.strptime(ended, '%Y-%m-%d %H:%M:%S.%f')
+    print(type(created), type(ended))
+    created_datetime = datetime.strptime(created, '%d-%m-%Y')
+    ended_datetime = datetime.strptime(ended, '%d-%m-%Y')
     delta_days = (ended_datetime - created_datetime).days
     return 0.05 + (delta_days * DAILY_COMMISSION)
 
@@ -95,6 +96,6 @@ def end_loan(loan_id, ended, paid_currency):
                 'Total Commission': total_commission,
                 'Paid Amount Before Commission': paid_amount_before_commission,
                 'Paid Amount': paid_amount,
-                'Loan End:': ended
+                'Loan End': ended
             }})
 

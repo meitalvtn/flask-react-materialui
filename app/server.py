@@ -2,6 +2,7 @@ from app import app
 from flask import jsonify, request
 from db import db_read
 import ExchangeManager
+import datetime
 
 
 @app.route('/')
