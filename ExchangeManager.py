@@ -12,7 +12,7 @@ def get_next_id():
 
 
 def get_base_commission():
-    return float(config_read()['base-commission']) * 0.01
+    return float(config_read()['base-commission'])
 
 
 def get_exchange_rate(to, base):
@@ -32,25 +32,23 @@ def generate_exchange_receipt(amount, to, base):
     rate = get_exchange_rate(to, base)
     amount_before_commission = rate * float(amount)
     final_amount = amount_before_commission * (1 - float(commission))
-    percent_commission = float(commission) * 100
     return {
-        'From Amount': amount,
+        'From Amount': float(amount),
         'From Currency': base,
         'To Currency': to,
-        'Commission': f'{str(percent_commission)}%',
-        'Amount Before Commission': amount_before_commission,
-        'Amount': final_amount,
+        'Commission': float(commission),
+        'Amount Before Commission': round(amount_before_commission, 2),
+        'Amount': round(final_amount, 2),
     }
 
 
 def generate_new_loan(amount, base, created):
     commission = get_base_commission()
-    percent_commission = float(commission) * 100
     new_loan = {
-        'Loan Amount': amount,
+        'Loan Amount': float(amount),
         'Loan Currency': base,
-        'Commission': f'{str(percent_commission)}%',
-        'Daily Commission': f'{DAILY_COMMISSION * 100}%',
+        'Commission': commission,
+        'Daily Commission': DAILY_COMMISSION,
         'Loan Start': created,
         'Loan id': get_next_id(),
         'ended_details': None
@@ -59,18 +57,17 @@ def generate_new_loan(amount, base, created):
     return new_loan
 
 
-def get_total_commission(created, ended):
-    print(type(created), type(ended))
-    created_datetime = datetime.strptime(created, '%d-%m-%Y')
+def get_total_commission(loan_data, ended):
+    created_datetime = datetime.strptime(loan_data['Loan Start'], '%d-%m-%Y')
     ended_datetime = datetime.strptime(ended, '%d-%m-%Y')
     delta_days = (ended_datetime - created_datetime).days
-    return 0.05 + (delta_days * DAILY_COMMISSION)
+    return loan_data['Commission'] + (delta_days * loan_data['Daily Commission'])
 
 
 def get_paid_amount_before_commission(loan, paid_currency):
     rate = get_exchange_rate(paid_currency, loan['Loan Currency'])
 
-    return float(loan['Loan Amount']) * rate
+    return loan['Loan Amount'] * rate
 
 
 def get_total_owed(paid_amount_before_commission, total_commission):
@@ -87,9 +84,9 @@ def end_loan(loan_id, ended, paid_currency):
     if loan['ended_details']:
         raise RuntimeError('Error: this loan has already been ended.')
 
-    total_commission = get_total_commission(loan['Loan Start'], ended)
-    paid_amount_before_commission = get_paid_amount_before_commission(loan, paid_currency)
-    paid_amount = get_total_owed(paid_amount_before_commission, total_commission)
+    total_commission = get_total_commission(loan, ended)
+    paid_amount_before_commission = round(get_paid_amount_before_commission(loan, paid_currency), 2)
+    paid_amount = round(get_total_owed(paid_amount_before_commission, total_commission), 2)
 
     return db_end_loan(loan_id, {'ended_details': {
                 'Paid Currency': paid_currency,

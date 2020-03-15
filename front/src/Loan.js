@@ -116,7 +116,7 @@ class Loan extends Component {
                                 variant="contained"
                                 size="medium"
                                 color="primary"
-                                onClick={this.handleAddLoanSubmit}>
+                                onClick={(e) => this.handleAddLoanSubmit(e)}>
                             Submit
                             </Button>
                         </Grid>
@@ -144,7 +144,7 @@ class Loan extends Component {
                                 variant="contained"
                                 size="medium"
                                 color="primary"
-                                onClick={this.handleEndLoanSubmit}>
+                                onClick={(e) => this.handleEndLoanSubmit(e)}>
                             Submit
                             </Button>
                         </Grid>

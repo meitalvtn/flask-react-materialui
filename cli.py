@@ -49,7 +49,7 @@ def main():
         try:
             if sys.argv[2] == 'base-commission':
                 new_base_commission = sys.argv[3]
-                config_add('base-commission', new_base_commission)
+                config_add('base-commission', float(new_base_commission) / 100)
                 print(f'Base commission configured to {new_base_commission}')
         except IndexError as e:
             print('You must specify something to configure.')

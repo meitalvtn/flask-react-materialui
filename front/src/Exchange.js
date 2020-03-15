@@ -55,19 +55,6 @@ class Exchange extends Component {
         this.setState({receipt: data})
     }
 
-//    render_receipt = () => {
-//        const receipt = this.state.receipt
-//        const classes = this.props.classes
-//        if (receipt) {
-//            return Object.keys(this.state.receipt).map((key) => {
-//                return <span className={classes.receiptLine}>
-//                            <div className={classes.receiptKey}>{key}:</div>
-//                            <div>{this.state.receipt[key]}</div>
-//                        </span>
-//            })
-//        }
-//    }
-
   render() {
     const {classes, amount, to, from} = this.props
     const {receipt} = this.state
@@ -107,7 +94,7 @@ class Exchange extends Component {
                 variant="contained"
                 size="medium"
                 color="primary"
-                onClick={this.handleSubmit}>Submit</Button>
+                onClick={e => this.handleSubmit(e)}>Submit</Button>
           </CardActions>
         </Card>
       );

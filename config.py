@@ -3,16 +3,16 @@ import json
 
 
 def config_read():
-    if not os.path.exists('config.txt'):
+    if not os.path.exists('config.json'):
         initial = {
-            'base-commission': '0.05'
+            'base-commission': 0.05
         }
-        open('config.txt', 'w').write(json.dumps(initial))
-    return json.load(open('config.txt'))
+        open('config.json', 'w').write(json.dumps(initial))
+    return json.load(open('config.json'))
 
 
 def config_add(config_name, value):
     configs = config_read()
     configs[config_name] = value
-    with open('config.txt', 'w') as file:
+    with open('config.json', 'w') as file:
         json.dump(configs, file)
