@@ -11,7 +11,6 @@ def present_output(results):
         print(f'   {k}: {v}')
 
 
-# TODO: error handle the use of requests and catch input errors? type checks? etc
 def main():
 
     if sys.argv[1] == "loan":

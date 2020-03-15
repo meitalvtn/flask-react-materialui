@@ -74,7 +74,6 @@ def get_total_owed(paid_amount_before_commission, total_commission):
     return paid_amount_before_commission * (1 + total_commission)
 
 
-# TODO: Is this a right way to error handle?
 def end_loan(loan_id, ended, paid_currency):
     try:
         loan = db_read()[loan_id]
